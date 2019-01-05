@@ -8,9 +8,10 @@ CPP = gcc -E
 
 xcOK = 0
 
-xcCUDA = KEPLER
-xcCUDA = FERMI
+#xcCUDA = VOLTA  # not work...
+#xcCUDA = PASCAL # not work...
 xcCUDA = 0
+xcCUDA = KEPLER
 
 xcPROF = 0
 xcMIC = 0
@@ -68,7 +69,7 @@ endif
 ifeq ($(xc), INTEL)
     CC = icc
     FC = ifort
-    COPT = -O3 -no-prec-div -no-prec-sqrt
+    COPT = -O3 -no-prec-div -no-prec-sqrt -fno-alias
     COPT0 = -O0
     CFLAGS = -g -Wall
     C99FLAGS = -std=c99
@@ -78,6 +79,9 @@ ifeq ($(xcMIC), 1)
     FFLAGS += -mmic
 else
     CFLAGS += -xHOST
+    #CFLAGS += -xCORE-AVX512 # SKL
+    #CFLAGS += -xCORE-AVX2   # HSW/BDW
+    #CFLAGS += -xCORE-AVX-I   # IVB
 endif
     OPENMP = -qopenmp
     PROF = -pg
@@ -205,9 +209,9 @@ endif
 CFLAGS += $(DEFS) ${INCDIR}
 CFLAGS += -I$(FALANX_TOP)/include
 
-#CFLAGS0 := $(CFLAGS) $(COPT0)
+CFLAGS0 := $(CFLAGS) $(COPT0)
 #CFLAGS  := $(CFLAGS) $(COPT)
-CFLAGS0 = $(CFLAGS) $(COPT0)
+#CFLAGS0 = $(CFLAGS) $(COPT0)
 CFLAGS  += $(COPT)
 
 LIBS += -lz
@@ -222,12 +226,17 @@ ifdef xcCUDA
 DEFS1 = -DUSE_CUDA
 # ARCH
 DEFS1 += -D$(xcCUDA)
-ifeq ($(xcCUDA), FERMI)
-ARCHFLAGS = -gencode=arch=compute_20,code=sm_20
-DEFS1 += -DCUDA_ARCH=200
-else
+ifeq ($(xcCUDA), KEPLER)
 ARCHFLAGS = -gencode=arch=compute_35,code=sm_35
 DEFS1 += -DCUDA_ARCH=350
+endif
+ifeq ($(xcCUDA), PASCAL)
+ARCHFLAGS = -gencode=arch=compute_60,code=sm_60
+DEFS1 += -DCUDA_ARCH=600
+endif
+ifeq ($(xcCUDA), VOLTA)
+ARCHFLAGS = -gencode=arch=compute_70,code=sm_70
+DEFS1 += -DCUDA_ARCH=700
 endif
 
 # FMT

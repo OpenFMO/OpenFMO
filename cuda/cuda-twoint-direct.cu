@@ -56,7 +56,8 @@ extern __shared__ double shared[];
 #define WORK(a) work[nthb*(a)+tidx]
 #endif
 
-#if CUDA_ARCH >= 350
+//#if CUDA_ARCH >= 350
+#if defined(__CUDA_ARCH__) && __CUDA_ARCH__ >= 350
 #define NREGS_064 __launch_bounds__(128,8)
 #define NREGS_128 __launch_bounds__(128,4)
 #define NREGS_255 __launch_bounds__(128,2)

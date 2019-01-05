@@ -34,7 +34,8 @@ extern "C" {
 
 //#define EPS_ERI 1.e-15
 //#define EPS_PS4 1.e-30
-#if CUDA_ARCH >= 350
+//#if CUDA_ARCH >= 350
+#if defined(__CUDA_ARCH__) && __CUDA_ARCH__ >= 350
 /*
 #define NREGS_064 __launch_bounds__(256,4)
 #define NREGS_128 __launch_bounds__(256,2)
