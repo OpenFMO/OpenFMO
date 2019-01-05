@@ -8,10 +8,10 @@ CPP = gcc -E
 
 xcOK = 0
 
+xcCUDA = KEPLER
 #xcCUDA = VOLTA  # not work...
 #xcCUDA = PASCAL # not work...
 xcCUDA = 0
-xcCUDA = KEPLER
 
 xcPROF = 0
 xcMIC = 0
